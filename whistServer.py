@@ -49,14 +49,7 @@ def compVal(one, two):
     
    
 config = {
-    "apiKey": "AIzaSyCG74Zk5lOcDq-mo2lNC_82yb8ELWaCihI",
-    "authDomain": "whist-4287e.firebaseapp.com",
-    "databaseURL" : "https://whist-4287e.firebaseio.com",
-    "projectId" : "whist-4287e",
-    "storageBucket" : "whist-4287e.appspot.com",
-    "messagingSenderId" : "360527192892",
-    "appId" : "1:360527192892:web:b99b4146643a7d3981f439",
-    "measurementId" : "G-E4ZY4Y250D"
+    ##Insert config here.  Excluded for privacy reasons.
   }
   
 firebase = pyrebase.initialize_app(config)
