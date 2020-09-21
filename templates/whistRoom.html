@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>whist Room {{k|tojson}}</title>
+<script>
+var identity={{p}};
+var key= {{k|tojson}};
+var keep=false;
+console.log(identity);
+console.log(key);
+</script>
+
+<style>
+	#title{
+	color: green;
+	text-align: center;
+	background-color: black;
+	font-size: 40px;
+	}
+	#players
+	{
+	color: white;
+	background-color: green;
+	font-size: 25px;
+	}
+	
+	body{
+	background-color: green;
+	}
+	ol li{
+		display:inline-block;
+		padding-right:30px;
+	}
+	
+	#bet_status{
+		display: inline-block; 
+		padding:20px 30px;
+		float:left;
+		background-color:blue; 
+		border:10px; 
+		border-color: white; 
+		border-style:ridge;
+        color:white;
+		float:left; 
+		height:500px; 
+		width: 12%;
+	}
+    
+    #bet_status h3{
+        font-size: 1.5em;
+        /*float:right;*/
+        padding:0;
+        margin:0;
+    }
+    
+    #bet_status h2{
+        padding:0;
+        margin:0;
+        display:inline-block;
+        float: left;
+    }
+	
+	#trump{
+		text-align: center;
+	}
+	
+	#hand{
+		text-align: center;
+		vertical-align:bottom;
+	}
+	
+	#score{
+		display: inline-block; 
+		padding: 0px 30px;
+		border:15px;
+		border-color: white;
+		border-style:ridge; 
+		background-color:black;
+		color:white;
+		float:right;
+		height:500px;
+		width: 12%;
+	}
+    
+    #livechat{
+        position: absolute;
+        bottom: 0px;
+        right: 50%;
+        
+    }
+
+    #chat p{
+        color:black;
+        border-bottom: 1px black solid;
+    }
+    #chat{
+        background-color: white;
+        overflow-y:scroll;
+        visibility:hidden;
+        right: 400px;
+        height:0;
+
+    }
+    #chat_button{
+        background-color: black;
+        color:white;
+    }
+    
+    @media(max-width:1325px){
+        #bet_status h2{
+            font-size:1.4em;
+        }
+        #bet_status h3{
+            font-size:1.4em;
+        }
+    }
+     @media(max-width:1250px){
+        #bet_status h2{
+            font-size:1.3em;
+        }
+        #bet_status h3{
+            font-size:1.3em;
+        }
+    }
+    @media(max-width:1155px){
+        #bet_status h2{
+            font-size:1.2em;
+        }
+        #bet_status h3{
+            font-size:1.2em;
+        }
+        #score{
+            font-size:0.9em;
+        }
+    }
+    @media(max-width:1075px){
+        #bet_status h2{
+            font-size:1.1em;
+        }
+        #bet_status h3{
+            font-size:1.1em;
+        }
+        #score{
+            font-size:0.8em;
+        }
+    }
+    @media(max-width:975px)
+    {
+        #bet_status h2{
+            font-size:1em;
+        }
+        #bet_status h3{
+            font-size:1em;
+        }
+        #score{
+            font-size:0.7em;
+        }
+    }
+     @media(max-width:900px)
+    {
+        #bet_status h2{
+            font-size:0.9em;
+        }
+        #bet_status h3{
+            font-size:0.9em;
+        }
+    }
+     @media(max-width:820px)
+    {
+        #bet_status h2{
+            font-size:0.8em;
+        }
+        #bet_status h3{
+            font-size:0.8em;
+        }
+        #score{
+            font-size:0.6em;
+        }
+    }
+    @media(max-width:820px)
+    {
+        #bet_status h2{
+          font-size:0.7em;
+        }
+        #bet_status h3{
+            font-size:0.7em;
+        }
+        #score{
+            font-size:0.5em;
+        }
+    }
+    @media(max-width:635px)
+    {
+        #bet_status h2{
+            font-size:0.65em;
+        }
+        #bet_status h3{
+            font-size:0.65em;
+        }
+    }
+    @media(max-width:600px)
+    {
+        #bet_status h2{
+            font-size:0.6em;
+        }
+        #bet_status h3{
+            font-size:0.6em;
+        }
+        #score{
+            font-size:0.45em;
+        }
+    }
+    @media(max-width:550px)
+    {
+        #bet_status h2{
+            font-size:0.55em;
+        }
+        #bet_status h3{
+            font-size:0.55em;
+        }
+        #score{
+            font-size:0.4em;
+        }
+    }
+    @media(max-width:505px)
+    {
+        #bet_status h2{
+            font-size:0.5em;
+        }
+        #bet_status h3{
+            font-size:0.5em;
+        }
+        #score{
+            font-size:0.35em;
+        }
+    }
+
+</style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cards-ie.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cards-ie9.css') }}">
+
+</head>
+<body>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-analytics.js"></script>
+
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyAql2Lr62LCSDw5Yj5nBEPe9F3IsUmjXZo",
+    authDomain: "paranoia-ce919.firebaseapp.com",
+    databaseURL: "https://paranoia-ce919.firebaseio.com",
+    projectId: "paranoia-ce919",
+    storageBucket: "paranoia-ce919.appspot.com",
+    messagingSenderId: "640380288963",
+    appId: "1:640380288963:web:2ef487904714ecaa94c776",
+    measurementId: "G-5YBDEEKYJZ"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script>
+    var socket = io();
+    socket.on('connect', function() { 
+	   socket.emit('create', {'data': {{k|tojson}}});
+	});
+	
+	socket.on('new_player',function(msg){
+	 var end= Object.keys(msg).length;
+	 if (end==2)
+	 {
+	 	if (identity==1&&document.getElementById('start_button')==null)
+		{
+			var button=document.createElement("button");
+			button.id='start_button';
+			button.innerHTML='START GAME';
+			button.onclick=function(){
+				var list = document.getElementById("players"); 
+				var numPlayers = document.getElementsByTagName("LI").length;
+				if(numPlayers>1)
+				{
+					//document.getElementById('start_button').disabled=true;
+					var dynamic=document.getElementById("dynamics");
+					while (dynamic.hasChildNodes()) {
+						dynamic.removeChild(dynamic.lastChild);
+					}
+					socket.emit('game_start',{'key':{{k|tojson}}});
+				}
+			};
+			var dynamic=document.getElementById("dynamics");
+			dynamic.appendChild(button);
+		}
+	}
+	 var i=1;
+	 document.getElementById("players").innerHTML = "";
+	 for(; i<end; i++)
+	 {
+		console.log(msg[String(i)]);
+		var player = document.createElement("LI");
+		var newb = document.createTextNode(String(i)+". "+msg[String(i)]);
+		player.appendChild(newb);                              // Append the text to <li>
+		//let newOption = new Option(msg[String(i)],msg[String(i)]);
+		//document.getElementById("select_person").add(newOption,undefined);
+		document.getElementById("players").appendChild(player); 
+	 }
+	 console.log('newbie');
+	 });
+	 
+	 socket.on('hands_dealt',function(msg){
+		var cards=msg[identity-1]
+		for (var i=1; i<msg.length; i++)
+		{
+			var hand=document.createElement('div');
+			hand.style="top: 0%; text-align:center;"
+			for (var j=0; j<cards.length; j++)
+			{
+				var back=document.createElement('div');
+				back.className="card back";
+				back.innerHTML="*";
+				hand.appendChild(back);
+			}
+			var opps=document.getElementById("oppHands");
+			opps.appendChild(hand);
+		}
+		
+		for (var i=0; i<cards.length; i++)
+		{
+			console.log(cards[i]);
+			
+			var button=document.createElement('button');
+						button.value=i;
+						button.disabled=true;
+						button.style.display="none;";
+						//button.name=card[1].innerHTML;
+						button.onclick=function(){
+							//console.log(card[1].innerHTML);
+							socket.emit('card_chosen',{'index':(this).value,'placer':identity,'suit':(this).name,'key':key});
+							(this).parentNode.parentNode.removeChild((this).parentNode);
+							var buttons=document.getElementsByTagName('button');
+							for(var j=0; j<buttons.length;)
+							{
+								console.log(j);
+								//buttons[j].remove();
+								buttons[j].disabled=true;
+								buttons[j].style.visibility="none;"
+								j++;
+							}
+				};
+			
+			var handCard=document.createElement('div');
+			var cardRank=document.createElement('span');
+			var cardSuit=document.createElement('span');
+			
+			cardRank.className="rank";	
+			cardSuit.className="suit";
+			
+			if (cards[i].charAt(0)=='X')
+			{
+				var cardClass="card rank-"+10;
+				cardRank.innerHTML="10";
+			}
+			else
+			{
+				var cardClass="card rank-"+cards[i].charAt(0);
+				cardRank.innerHTML=cards[i].charAt(0).toUpperCase();
+			}
+			if (cards[i].charAt(1)=='H')
+			{
+				cardClass=cardClass+" hearts";
+				cardSuit.innerHTML="&hearts;";
+				button.name="&hearts;";
+			}
+			else if(cards[i].charAt(1)=='S')
+			{
+				cardClass=cardClass+" spades";
+				cardSuit.innerHTML="&spades;";
+				button.name="&spades;";
+			}
+			else if(cards[i].charAt(1)=='C')
+			{
+				cardClass=cardClass+" clubs";
+				cardSuit.innerHTML="&clubs;";
+				button.name="&clubs;";
+			}
+			else if(cards[i].charAt(1)=='D')
+			{
+				cardClass=cardClass+" diams";
+				cardSuit.innerHTML="&diams;";
+				button.name="&diams;";
+			}
+			handCard.className= cardClass;
+			
+			handCard.appendChild(cardRank);
+			handCard.appendChild(cardSuit);
+			handCard.appendChild(button);
+			var hand=document.getElementById('hand');
+			hand.appendChild(handCard);
+			
+			
+		}
+	});
+	
+	socket.on('trump_chosen', function(msg){
+		var trumpCard= document.createElement('div');
+		var trumpRank = document.createElement('span');
+		var trumpSuit= document.createElement('span');
+		
+		trumpRank.className="rank";	
+		trumpSuit.className="suit";
+		
+		if (msg.charAt(0)=='X')
+			{
+				var cardClass="card rank-"+10;
+				trumpRank.innerHTML="10";
+			}
+		else
+		{	
+			var cardClass="card rank-"+msg.charAt(0);
+			trumpRank.innerHTML=msg.charAt(0).toUpperCase();
+		}
+		if (msg.charAt(1)=='H')
+			{
+				cardClass=cardClass+" hearts";
+				trumpSuit.innerHTML="&hearts;";
+			}
+			else if(msg.charAt(1)=='S')
+			{
+				cardClass=cardClass+" spades";
+				trumpSuit.innerHTML="&spades;";
+			}
+			else if(msg.charAt(1)=='C')
+			{
+				cardClass=cardClass+" clubs";
+				trumpSuit.innerHTML="&clubs;";
+			}
+			else if(msg.charAt(1)=='D')
+			{
+				cardClass=cardClass+" diams";
+				trumpSuit.innerHTML="&diams;";
+			}
+			trumpCard.className= cardClass;
+			var trump=document.getElementById('trump');
+			while (trump.hasChildNodes()) {
+                trump.removeChild(trump.lastChild);
+			}
+			clearOppHands();
+			trumpCard.appendChild(trumpRank);
+			trumpCard.appendChild(trumpSuit);
+			trump.appendChild(trumpCard);
+		
+	
+	});
+	 
+	 socket.on('place_bet', function(msg){
+		console.log(msg['exempt']);
+		if(msg['turn']==identity)
+		{
+			var dynamic=document.getElementById('dynamics');
+			var select=document.createElement('select');
+			var ex=false;
+			select.id="bet_select";
+			var selectButton=document.createElement('button');
+			selectButton.onclick=function(){
+				socket.emit('bet_placed',{'bet':document.getElementById('bet_select').value,'key':key,'placer':identity});
+				while (dynamic.hasChildNodes()) {
+                dynamic.removeChild(dynamic.lastChild);
+				}
+			};
+			selectButton.innerHTML="Place Your Bet!"
+			dynamics.appendChild(select);
+			dynamics.appendChild(selectButton);
+			for (var i=0; i<=msg['max']; i++)
+			{
+				if(msg['exempt']!=i)
+				{
+					let newOption = new Option(String(i),String(i));
+					document.getElementById("bet_select").add(newOption,undefined);
+				}
+			}
+		}
+	 
+	 });
+	 
+	 socket.on('card_placed', function(msg){
+		var label=document.createElement('h2');
+		label.innerHTML=msg['placer']+":";
+		var placedCard=document.createElement('div');
+		var cardRank=document.createElement('span');
+		var cardSuit=document.createElement('span');
+		
+			cardRank.className="rank";	
+			cardSuit.className="suit";
+			
+			if (msg['card'].charAt(0)=='X')
+			{
+				var cardClass="card rank-"+10;
+				cardRank.innerHTML="10";
+			}
+			else
+			{
+				var cardClass="card rank-"+msg['card'].charAt(0);
+				cardRank.innerHTML=msg['card'].charAt(0).toUpperCase();
+			}
+			if (msg['card'].charAt(1)=='H')
+			{
+				cardClass=cardClass+" hearts";
+				cardSuit.innerHTML="&hearts;";
+			}
+			else if(msg['card'].charAt(1)=='S')
+			{
+				cardClass=cardClass+" spades";
+				cardSuit.innerHTML="&spades;";
+			}
+			else if(msg['card'].charAt(1)=='C')
+			{
+				cardClass=cardClass+" clubs";
+				cardSuit.innerHTML="&clubs;";
+			}
+			else if(msg['card'].charAt(1)=='D')
+			{
+				cardClass=cardClass+" diams";
+				cardSuit.innerHTML="&diams;";
+			}
+			placedCard.className= cardClass;
+			
+			placedCard.appendChild(cardRank);
+			placedCard.appendChild(cardSuit);
+			var played=document.getElementById('played');
+			played.appendChild(label);
+			played.appendChild(placedCard);
+			
+			if(msg['end']&&identity==msg['placer'])
+				socket.emit('end_round_clear',{'key':key});
+			
+			
+		
+	 });
+	 
+	 socket.on('choose_card', function(msg){
+		if (identity==msg['turn'])
+		{
+			var buttons=document.getElementsByTagName('button');
+			if (buttons.length==0)
+			{
+				socket.emit('next_round',{'key': key});
+				return;
+			}
+			/*{
+				var childDivs = document.getElementById('hand').getElementsByTagName('div');
+				var count=0;
+				for( var i=0; i< childDivs.length; i++ )
+				{
+					var childDiv = childDivs[i];
+					var card=childDiv.childNodes;
+					if(msg['suit']=='X')
+					{
+						var button=document.createElement('button');
+						button.value=i;
+						button.name=card[1].innerHTML;
+						button.onclick=function(){
+							console.log(card[1].innerHTML);
+							socket.emit('card_chosen',{'index':(this).value,'placer':msg['turn'],'suit':(this).name,'key':key});
+							(this).parentNode.parentNode.removeChild((this).parentNode);
+							var buttons=document.getElementsByTagName('button');
+							for(var j=0; j<buttons.length;)
+							{
+								console.log(j);
+								//buttons[j].remove();
+								buttons[j].disabled=true;
+								buttons[j].style.visibility="none;";
+								j++;
+							}
+						};
+						
+						childDiv.appendChild(button);
+						count++;
+					}
+					else if(msg['suit']==card[1].innerHTML)
+					{
+						var button=document.createElement('button');
+						button.value=i;
+						button.onclick=function(){
+						console.log(card[1].innerHTML);
+							socket.emit('card_chosen',{'index':(this).value,'placer':msg['turn'],'suit':msg['suit'],'key':key});
+							(this).parentNode.parentNode.removeChild((this).parentNode);
+							var buttons=document.getElementsByTagName('button');
+							for(var j=0; j<buttons.length;)
+							{
+								console.log(j);
+								//buttons[j].remove();
+								buttons[j].disabled=true;
+								buttons[j].style.visibility="none;";
+								j++;
+							}
+						};
+						childDiv.appendChild(button);
+						count++;
+					}
+					
+				}
+				if (count==0)
+				{
+					for( var i=0; i< childDivs.length; i++ )
+					{
+					var childDiv = childDivs[i];
+					var card=childDiv.childNodes;
+					var button=document.createElement('button');
+					button.value=i;
+					//button.onclick="killButtons()";
+					button.onclick=function(){
+							socket.emit('card_chosen',{'index':(this).value,'placer':msg['turn'],'suit':msg['suit'],'key':key});
+							(this).parentNode.parentNode.removeChild((this).parentNode);
+							var buttons=document.getElementsByTagName('button');
+							for(var j=0; j<buttons.length;)
+							{
+								console.log(j);
+								//buttons[j].remove();
+								buttons[j].disabled=true;
+								buttons[j].style.visibility="none;"
+								j++;
+							}
+					};
+						
+					childDiv.appendChild(button);
+					count++;
+					}
+				}
+			}	
+			 else
+			 {
+			*/	var childDivs = document.getElementById('hand').getElementsByTagName('div');
+				var count=0;
+				console.log(msg['suit']);
+				for( var i=0; i< childDivs.length; i++ )
+				{
+					var childDiv = childDivs[i];
+					var card=childDiv.childNodes;
+					console.log(card[1].innerHTML);
+					var temp=document.createElement('h2');
+					temp.innerHTML=msg['suit'];
+					if (msg['suit']=='X')
+					{
+						var button= card[2];//childDiv.getElementsByTagName('button');
+						button.style.display="inline;";
+						button.disabled=false;
+						count++;
+					
+					}
+					else if(temp.innerHTML==card[1].innerHTML)
+					{
+						console.log('suit match');
+						var button= card[2];//childDiv.getElementsByTagName('button');
+						button.style.display="inline;";
+						button.disabled=false;
+						count++;
+					}
+				}
+				if(count==0)
+				{
+					console.log('no match');
+					for( var i=0; i< childDivs.length; i++ )
+					{
+						var childDiv = childDivs[i];
+						var card=childDiv.childNodes;
+						var button= card[2];//childDiv.getElementsByTagName('button');
+						button.style.display="inline;";
+						button.disabled=false;
+						count++;
+					}
+				}
+			 //}
+		}
+	 });
+	 
+	 socket.on('clear_table',function()
+	 {
+		clearPlayed();
+	 });
+	 
+	 socket.on('scoreboard_update',function(msg){
+		scoreboard=document.getElementById('score');
+		while (scoreboard.hasChildNodes()) {
+            scoreboard.removeChild(scoreboard.lastChild);
+		}
+		var head= document.createElement('h5');
+		head.innerHTML="SCOREBOARD";
+		scoreboard.appendChild(head);
+		for (var i=0; i<msg.length; i++)
+		{
+			var player_score=document.createElement('h2');
+			player_score.innerHTML="Player "+(i+1)+": "+msg[i];
+			scoreboard.appendChild(player_score);
+		}
+		var bets=document.getElementById('bet_status');
+		while(bets.hasChildNodes())
+		{
+			bets.removeChild(bets.lastChild);
+		}
+	 });
+	 
+	 socket.on('round_update',function(msg){
+		bets=document.getElementById('bet_status');
+		if (bets.getElementsByTagName('h2').length==0)
+		{
+			var head= document.createElement('h5');
+			head.innerHTML="ROUND STATUS";
+			bets.appendChild(head);
+			for(var i=0; i<msg['length'];i++)
+			{
+				var player_score=document.createElement('h2');
+				player_score.innerHTML="Player "+(i+1)+": "+0;
+				bets.appendChild(player_score);
+			}
+		}
+		var player=bets.getElementsByTagName('h2');
+        //var letter=player[msg['player']-1].innerHTML.charAt(player[msg['player']-1].length-1);
+        //console.log(letter);
+		player[msg['player']-1].innerHTML="Player "+(msg['player'])+": "+msg['score']+" of&nbsp;";
+        
+	 });
+    
+    socket.on('bet_status_set',function(msg){
+        console.log("setting betting");
+        bets=document.getElementById('bet_status');
+        var head= document.createElement('h5');
+        head.innerHTML="ROUND STATUS";
+        bets.appendChild(head);
+            for(var i=0; i<msg['length']-1;i++)
+			{
+				var player_score=document.createElement('h2');
+				player_score.innerHTML="Player "+(i+1)+": "+"0 of&nbsp;";
+                //player_score.style="display:inline;";
+                var bet_val=document.createElement('h3');
+                //bet_val.style="font-size: 1.5em;";
+                bet_val.innerHTML=msg[String(i+1)];
+				bets.appendChild(player_score);
+                bets.appendChild(bet_val);
+			}    
+    });
+	 
+	 socket.on('trumpless_set',function(){
+		clearTrump();
+		clearOppHands();
+	 });
+	 
+	 socket.on('game_over', function(){
+		keep=true;
+		window.location.replace("/../gameOver/"+key);
+	 });
+	 
+	 socket.on('someone_left',function(msg){
+		if (msg['player']<identity)
+			identity--;
+		var id=document.getElementById('identity');
+		id.innerHTML="player "+identity;
+		clearTrump();
+		clearOppHands();
+		clearHand();
+		clearPlayed();
+	 });
+    
+	 
+	 window.addEventListener("beforeunload", function() {if (!keep){socket.emit('player_left', {'data':{{k|tojson}}, 'player':identity});}});
+	 
+	function killButtons(){
+	var buttons=document.getElementsByTagName('button');
+	for(var j=0; j<buttons.length;)
+	{
+		console.log(j);
+		buttons[j].remove();
+	}
+	}
+	
+	function clearHand(){
+		var hand=document.getElementById('hand');
+		while (hand.hasChildNodes()) {
+            hand.removeChild(hand.lastChild);
+		}
+	}
+	
+	function clearTrump(){
+		var trump=document.getElementById('trump');
+		while (trump.hasChildNodes()) {
+            trump.removeChild(trump.lastChild);
+		}
+	}
+	 
+	 function clearPlayed(){
+	 var played=document.getElementById('played');
+	 while (played.hasChildNodes()) {
+                played.removeChild(played.lastChild);
+			}
+	 }
+	 
+	function clearOppHands(){
+	var oppHands=document.getElementById('oppHands');
+	while (oppHands.hasChildNodes()) {
+        oppHands.removeChild(oppHands.lastChild);
+	}
+	}
+        
+</script>
+
+<ol id="players"></ol>
+<h2 id="title">Game Room: {{k}} </h2>
+<h2 id="identity">player {{p}}</h2>
+<div id="bet_status" >
+    <h2> Player 1: 0 of </h2><h3>&nbsp;0</h3>
+</div>
+
+<div id="score">
+    <h2> Player 1: 100</h2>
+</div><br>
+<div class="playingCards fourColours faceImages simpleCards inText rotateHand">
+<div id="trump">
+</div>
+<div id= "oppHands">
+</div>
+<div id="hand">
+</div>
+<div id="played">
+</div>
+</div>
+<div id="dynamics">
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Whist End Screen</title>
+
+<style>
+
+body{
+	background-color:white;
+}
+
+#scores{
+	width:550px;
+	height:auto;
+	margin:0 auto;
+}
+
+#FinalStandings{
+	background-color: green;
+	border-bottom-width:5px;
+	border-right-width:5px;
+	border-left-width:5px;
+	border-color:black;
+	border-style:ridge;
+	border-radius:5px;
+	width:500px;
+}
+
+#ScoreHead{
+	text-align:center;
+}
+
+#replay{
+	background-color:black;
+	color:white;
+    margin: 5px auto;
+
+}
+
+#roomSwap{
+	float:right;
+	padding-left:10px;
+	margin:0px;
+}
+
+#roomSubmit{
+	background-color:black;
+	color:white;
+}
+
+</style>
+
+{%set names=dict()%}
+{%for player in list%}
+{% set key = loop.index|string %}
+{% if key in names %}
+{% set _dummy = names.update( {key: player.name|string})  %}
+{% else %}
+{% set _dummy = names.update({ key:1 }) %}
+{% endif %}
+{%endfor%}
+
+</head>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+
+<script>
+	var socket = io();
+	socket.on('connect', function() { 
+	socket.emit('end_connect', {{id|tojson}});
+	});
+	
+	/*socket.on('redirect', function(msg){
+		window.location.replace("/../game/"+msg['extend']);//("https://espn.com");//location.hostname+"/game/"+msg['extend']);
+	}); */
+</script>
+<script>
+	/*function replay(){
+		//console.log({{names}});
+		socket.emit('replay', {'id':{{id|tojson}},'players':{'1':'Jason'}});//{{players}}//Fiix to work better
+	}*/
+	
+	function home(){
+		window.location.replace("/../");
+	}
+
+</script>
+
+<body>
+	<div id="scores">
+		<ol id="FinalStandings"><h1 id="ScoreHead"><u>Final Score</u></h1>
+		{%for player in list%}
+			{%if loop.index==1%}
+			<li style="background-color:gold; font-size:30px;"><span style="background-color:gold; font-size:50px;">{{player.name|string~": "~player.score}}</span></li>
+			{%elif loop.index==2%}
+			<li style="background-color:silver;font-size:30px;"><span style="background-color:silver; font-size:50px;">{{player.name|string~": "~player.score}}</span></li>
+			{%elif loop.index==3%}
+			<li style="background-color:#CD7F32;font-size:30px;"><span style="background-color:#CD7F32; font-size:50px;">{{player.name|string~": "~player.score}}</span></li>
+			{%else%}
+			<li style="background-color:white;font-size:30px;"><span style="background-color:white; font-size:50px;">{{player.name|string~": "~player.score}}</span></li>
+			{%endif%}
+		{%endfor%}
+        <button id="replay" onclick="home()">Go to Whist Home</button>
+		</ol>
+		<!--<div id="roomSwap">
+			<input id="switchRoom" type="text">
+			<button id="roomSubmit">Join New Room</button>
+		</div>  -->
+	</div>
+</body>
+
+
+
+</html>

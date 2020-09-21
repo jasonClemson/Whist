@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>whist Welcome Screen</title>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-analytics.js"></script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cards-ie.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cards-ie9.css') }}">
+
+<style>
+	#title{
+	color: green;
+	text-align: center;
+	background-color: black;
+	font-size: 40px;
+	}
+	
+	.form-group{
+	   text-align: center;
+	}
+	
+	body{
+        height:auto;
+	}
+	
+	.btn-primary{
+	   color: white;
+	   background-color: black;
+	}
+	
+	.btn-primary:hover{
+		color:green;
+	}
+	
+    #foot_wrap{
+        position: absolute;
+        bottom: 0px;
+        border: 3px solid #8AC007;
+        vertical-align: bottom;
+        text-align:center;
+        background-color: green;
+        color:white;
+        border: 2px black solid;
+        margin-right: 0;
+        margin-left: 0;
+        margin-bottom: 5px;
+        width:98%;
+
+    }
+    
+    footer a{
+        text-decoration: none;
+        color:cyan
+    }
+	
+
+
+</style>
+</head>
+<body>
+<script>
+
+  // Your web app's Firebase configuration
+  
+  firebaseConfig = {
+    apiKey: "AIzaSyAql2Lr62LCSDw5Yj5nBEPe9F3IsUmjXZo",
+    authDomain: "paranoia-ce919.firebaseapp.com",
+    databaseURL: "https://paranoia-ce919.firebaseio.com",
+    projectId: "paranoia-ce919",
+    storageBucket: "paranoia-ce919.appspot.com",
+    messagingSenderId: "640380288963",
+    appId: "1:640380288963:web:2ef487904714ecaa94c776",
+    measurementId: "G-5YBDEEKYJZ"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  //firebase.analytics();
+
+// Update the current slider value (each time you drag the slider handle)
+  //slider.oninput = function() {
+  //output.innerHTML = this.value;
+  //}
+  
+  /*<link href="../CSS-Playing-Cards-master/CSS-Playing-Cards-master/cards.css" type="text/css" rel="stylesheet" media="media">
+
+<link href="../CSS-Playing-Cards-master/CSS-Playing-Cards-master/cards-ie.css" type="text/css">
+
+<link href="../CSS-Playing-Cards-master/CSS-Playing-Cards-master/cards-ie9.css" type="text/css">
+
+<link href="../CSS-Playing-Cards-master/CSS-Playing-Cards-master/faces">
+}*/
+  
+</script>
+
+<h2 id ="title">Welcome to Whist!</h2>
+<form class="form-group" action="/" method="post">
+<a href="http://127.0.0.1:5000/rules">Read the rules</a>
+<h2>What's your name?</h2>
+<input type="text" name="name" value="name" class= "form-control"><br>
+<h2>Input game code below</h2>
+<input type="text" name="gamecode" value="gamecode" class= "form-control">
+<button class="btn btn-primary" type="submit" name="submit" value="enter">Submit</button>
+<h2>Or start your own game below!</h2>
+<button class="btn btn-primary" type="submit" name="submit" value="new game">Submit</button>
+</form>
+<div class="playingCards fourColours faceImages simpleCards inText rotateHand">
+<div class="card rank-7 spades">
+    <span class="rank">7</span>
+    <span class="suit">&spades;</span>
+</div>
+<div class="card back">*</div>
+<a class="card rank-q hearts">
+    <span class="rank">Q</span>
+    <span class="suit">&hearts;</span>
+</a>
+</div>
+<div id="foot_wrap">
+    <footer class="footer">
+        <p>Game Design by Jason Teets, Card Design by <a href="https://github.com/selfthinker/CSS-Playing-Cards">Anika Henke</a></p>
+    
+    </footer>
+</div>
+</body>
