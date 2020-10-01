@@ -1,7 +1,3 @@
-#button appears for start game after one player
-#figure out better height options
-#status bar for bt or out of?
-
 #import eventlet
 import logging
 #import pickle
@@ -54,8 +50,6 @@ config = {
   
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
-auth=firebase.auth()
-user = auth.sign_in_with_email_and_password("teetsj19@gmail.com", "Ar!3!5n3rT!m3")
 
 from flask import *
 
